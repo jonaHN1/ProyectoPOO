@@ -4,7 +4,7 @@ import logging
 
 from fastapi import HTTPException
 
-from models.medicamento import medicamento
+from models.cliente import cliente
 from utils.database import execute_query_json
 
 logging.basicConfig(level=logging.INFO)
@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 
-async def get_one( id: int ) -> medicamento:
+async def get_one( id: int ) -> cliente:
 
     selectscript = """
         SELECT [id]
             ,[nombre]
-            ,[fecha_vencimiento]
-        FROM [FARMACIA].[MEDICAMENTO]
+            ,[fecha_nacimiento]
+        FROM [FARMACIA].[CLIENTE]
         WHERE id = ?
     """
 
@@ -31,19 +31,19 @@ async def get_one( id: int ) -> medicamento:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            raise HTTPException(status_code=404, detail=f"medicamento not found")
+            raise HTTPException(status_code=404, detail=f"cliente not found")
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Database error: { str(e) }")
 
 
-async def get_all() -> list[medicamento]:
+async def get_all() -> list[cliente]:
 
     selectscript = """
         SELECT [id]
             ,[nombre]
-            ,[fecha_vencimiento]
-        FROM [FARMACIA].[MEDICAMENTO]
+            ,[fecha_nacimiento]
+        FROM [FARMACIA].[CLIENTE]
     """
 
     
@@ -56,17 +56,17 @@ async def get_all() -> list[medicamento]:
 
 
 
-async def crear_medicamento( medicamento: medicamento ) -> medicamento:
+async def crear_cliente( cliente: cliente ) -> cliente:
 
     sqlscript: str = """
-        INSERT INTO [FARMACIA].[MEDICAMENTO] ([id], [nombre], [fecha_vencimiento])
+        INSERT INTO [FARMACIA].[CLIENTE] ([id], [nombre], [fecha_nacimiento])
         VALUES (?, ?, ?);
     """
 
     params = [
-        medicamento.id,
-        medicamento.nombre,
-        medicamento.fecha_vencimiento
+        cliente.id,
+        cliente.nombre,
+        cliente.fecha_nacimiento
 
     ]
 
@@ -79,12 +79,12 @@ async def crear_medicamento( medicamento: medicamento ) -> medicamento:
     sqlfind: str = """
         SELECT [id]
             ,[nombre]
-            ,[fecha_vencimiento]
-        FROM [FARMACIA].[MEDICAMENTO]
-        WHERE id = ? and nombre = ? and fecha_vencimiento = ?
+            ,[fecha_nacimiento]
+        FROM [FARMACIA].[CLIENTE]
+        WHERE id = ? and nombre = ? and fecha_nacimiento = ?
     """
     
-    params = [medicamento.id, medicamento.nombre ,medicamento.fecha_vencimiento]
+    params = [cliente.id, cliente.nombre ,cliente.fecha_nacimiento]
 
     result_dict=[]
     try:
@@ -98,10 +98,10 @@ async def crear_medicamento( medicamento: medicamento ) -> medicamento:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
 
-async def delete_medicamento(id: int) -> str:
+async def delete_cliente(id: int) -> str:
 
     deletescript = """
-       DELETE FROM [FARMACIA].[MEDICAMENTO]
+       DELETE FROM [FARMACIA].[CLIENTE]
        WHERE [id] = ?
     """
 
@@ -113,22 +113,22 @@ async def delete_medicamento(id: int) -> str:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
 
-async def update_medicamento(medicamento:medicamento) -> medicamento:
+async def update_cliente(cliente:cliente) -> cliente:
 
 
-    dict = medicamento.model_dump(exclude_none = True)
+    dict = cliente.model_dump(exclude_none = True)
 
     keys = [k for k in dict.keys()]
     keys.remove('id')
     variables = " = ?, ".join(keys)+ " = ?"
 
     updatescript = f"""
-        UPDATE [FARMACIA].[MEDICAMENTO]
+        UPDATE [FARMACIA].[CLIENTE]
         SET {variables}
         WHERE [id] = ?;
     """
     params = [dict[v] for v in keys]
-    params.append(medicamento.id)
+    params.append(cliente.id)
 
     update_result = None
     try:
@@ -140,12 +140,12 @@ async def update_medicamento(medicamento:medicamento) -> medicamento:
     sqlfind: str = """
         SELECT [id]
             ,[nombre]
-            ,[fecha_vencimiento]
-        FROM [FARMACIA].[MEDICAMENTO]
-        WHERE id = ? and nombre = ? and fecha_vencimiento = ?
+            ,[fecha_nacimiento]
+        FROM [FARMACIA].[CLIENTE]
+        WHERE id = ? and nombre = ? and fecha_nacimiento = ?
     """
     
-    params = [medicamento.id, medicamento.nombre ,medicamento.fecha_vencimiento]
+    params = [cliente.id, cliente.nombre ,cliente.fecha_nacimiento]
 
     result_dict=[]
     try:
@@ -159,10 +159,10 @@ async def update_medicamento(medicamento:medicamento) -> medicamento:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
 
-async def delete_medicamento(id: int) -> str:
+async def delete_cliente(id: int) -> str:
 
     deletescript = """
-       DELETE FROM [FARMACIA].[MEDICAMENTO]
+       DELETE FROM [FARMACIA].[CLIENTE]
        WHERE [id] = ?
     """
 

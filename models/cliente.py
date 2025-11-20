@@ -4,20 +4,20 @@ from datetime import date
 import re
 
 
-class medicamento(BaseModel):
+class cliente(BaseModel):
     id: Optional[int] = Field(
         default=None,
         description="El ID autoincrementable para medicamento"
     )
 
     nombre: Optional[str] = Field(
-        description="Nombre: medicamentto",
+        description="Nombre: ",
         pattern=r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' -]+$",
         default=None,
-        examples=["Amoxicilina"]
+        examples=["Jose"]
     )
 
-    fecha_vencimiento: Optional[date] = Field(
+    fecha_nacimiento: Optional[date] = Field(
         default=None,
         description="2000-04-21"
     )
